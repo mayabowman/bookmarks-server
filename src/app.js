@@ -5,6 +5,7 @@ const cors = require('cors')
 const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
 const winston = require('winston')
+const uuid = require('uuid/v4')
 
 const app = express()
 
@@ -29,6 +30,7 @@ if (NODE_ENV !== 'production') {
 app.use(morgan(morganOption))
 app.use(helmet())
 app.use(cors())
+app.use(express.json())
 
 app.use(function validateBearerToken(req, res, next) {
   const apiToken = process.env.API_TOKEN
@@ -60,6 +62,57 @@ app.get('/', (req, res) => {
 
 app.get('/bookmarks', (req, res) => {
   res.json(bookmarks)
+})
+
+app.get('/bookmarks/:id', (req, res) => {
+  const { id } = req.params
+  const bookmark = bookmarks.find(b => b.id == id)
+
+  // make sure we found a bookmark
+  if (!bookmark) {
+    logger.error(`Bookmark with id ${id} not found.`)
+    return res.status(404).send('Bookmark Not Found')
+  }
+  res.json(bookmark)
+})
+
+app.post('/bookmarks', (req, res) => {
+  const { title, url, description, rating } = req.body
+
+  if (!title) {
+    logger.error(`Title is required`)
+    return res.status(400).send('Invalid data')
+  }
+
+  if (!url) {
+    logger.error(`Url is required`)
+    return res.status(400).send('Invalid data')
+  }
+
+  if (!description) {
+    logger.error(`Description is required`)
+    return res.status(400).send('Invalid data')
+  }
+
+  if (!rating) {
+    logger.error(`Rating is required`)
+    return res.status(400).send('Invalid data')
+  }
+
+  const id = uuid()
+  const bookmark = {
+    id,
+    title,
+    url,
+    description,
+    rating
+  }
+
+  list.push(bookmark)
+
+  logger.info(`Bookmark with id ${id} created`)
+
+  res.status(201).location(`http://localhost:8000/bookmarks/${id}`).json({id})
 })
 
 app.get('/list', (req, res) => {
