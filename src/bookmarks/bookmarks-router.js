@@ -1,6 +1,5 @@
 const express = require('express')
 const uuid = require('uuid/v4')
-const { isWebUri } = require('valid-url')
 const logger = require('../logger')
 const store = require('../store')
 
@@ -10,7 +9,7 @@ const bodyParser = express.json()
 bookmarksRouter 
   .route('/bookmarks')
   .get((req, res) => {
-    res.json(bookmarks)
+    res.json(store.bookmarks)
   })
   .post(bodyParser, (req, res) => {
     const { title, url, description, rating } = req.body
@@ -44,7 +43,7 @@ bookmarksRouter
       rating
     }
 
-    store.bookmarkbookmarks.push(bookmark)
+    store.bookmarks.push(bookmark)
 
     logger.info(`Bookmark with id ${id} created`)
 
