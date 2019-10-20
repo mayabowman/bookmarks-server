@@ -50,10 +50,20 @@ const bookmarks = [{
   rating: 'Rating One'
 }]
 
-const list = []
+const list = [{
+  list: 'List of bookmarks'
+}]
 
 app.get('/', (req, res) => {
   res.send('Hello, world!')
+})
+
+app.get('/bookmarks', (req, res) => {
+  res.json(bookmarks)
+})
+
+app.get('/list', (req, res) => {
+  res.json(list)
 })
 
 app.use(function errorHandler(error, req, res, next) {
