@@ -54,14 +54,14 @@ bookmarksRouter
   .route('/bookmarks/:id')
   .get((req, res) => {
     const { id } = req.params
-  const bookmark = bookmarks.find(b => b.id == id)
+    const bookmark = store.bookmarks.find(b => b.id == id)
 
-  // make sure we found a bookmark
-  if (!bookmark) {
-    logger.error(`Bookmark with id ${id} not found.`)
-    return res.status(404).send('Bookmark Not Found')
-  }
-  res.json(bookmark)
+    // make sure we found a bookmark
+    if (!bookmark) {
+      logger.error(`Bookmark with id ${id} not found.`)
+      return res.status(404).send('Bookmark Not Found')
+    }
+    res.json(bookmark)
   })
   .delete((req, res) => {
     const { id } = req.params
