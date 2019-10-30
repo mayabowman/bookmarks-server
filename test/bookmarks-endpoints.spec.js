@@ -268,7 +268,7 @@ describe('Bookmarks Endpoints', () => {
         .send(newBookmarkInvalidUrl)
         .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
         .expect(400, {
-          error: { message: `'url' must be a valid URL`}
+          error: { message: `'url' must be a valid url`}
         })
     })
 
